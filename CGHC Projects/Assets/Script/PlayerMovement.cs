@@ -36,12 +36,16 @@ public class PlayerMovement : MonoBehaviour
         Vector2 lookDir = mousePos - rb.position;
 
         UpdateRotation(lookDir);
+        
 
         if (Input.GetMouseButtonDown(0))
         {
             Shoot(lookDir);
            
         }
+       
+        
+       
     }
 
     void FixedUpdate()
