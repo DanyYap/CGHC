@@ -9,10 +9,10 @@ public class PlayerMovement : MonoBehaviour
     public float moveSpeed = 5f;
     public Rigidbody2D rb;
     public Transform firePoint;
-    
-
+    public float attackCD;
+    public bool shootCD = true;
     public Vector2 movement;
-    public Vector2 mousePos;    
+    public Vector2 mousePos;
 
     public Camera cam;
     private SpriteRenderer rbSprite;
@@ -36,21 +36,22 @@ public class PlayerMovement : MonoBehaviour
         Vector2 lookDir = mousePos - rb.position;
 
         UpdateRotation(lookDir);
-        
+        ShootCoolDown();
 
-        if (Input.GetMouseButtonDown(0))
+        if (shootCD == true)
         {
             Shoot(lookDir);
-           
+            attackCD = 0f;
+
         }
-       
-        
-       
+
+
+
     }
 
     void FixedUpdate()
     {
-        rb.MovePosition(rb.position + movement*moveSpeed *  Time.fixedDeltaTime);
+        rb.MovePosition(rb.position + movement * moveSpeed * Time.fixedDeltaTime);
 
     }
 
@@ -79,5 +80,18 @@ public class PlayerMovement : MonoBehaviour
 
         // Set the velocity of the projectile to shoot in the calculated direction
         projectileRb.velocity = direction * bulletSpeed;
+    }
+
+    void ShootCoolDown()
+    {
+        if (attackCD < 60)
+        {
+            shootCD = false;
+            attackCD++;
+        }
+        else
+        {
+            shootCD = true;
+        }
     }
 }
