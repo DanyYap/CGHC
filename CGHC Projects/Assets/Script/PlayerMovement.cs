@@ -5,17 +5,23 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     public GameObject bulletPrefab;
-    public float bulletSpeed = 10f;
-    public float moveSpeed = 5f;
+    public GameObject ChargePrefab;
+    
     public Rigidbody2D rb;
     public Transform firePoint;
+
+    public float bulletSpeed = 25f;
+    public float moveSpeed = 5f;
     public float attackCD;
+
     public bool shootCD = true;
+
     public Vector2 movement;
     public Vector2 mousePos;
 
     public Camera cam;
     private SpriteRenderer rbSprite;
+    private float chargetimer;
 
     private void Start()
     {
@@ -32,8 +38,11 @@ public class PlayerMovement : MonoBehaviour
         movement.x = Input.GetAxisRaw("Horizontal");
         movement.y = Input.GetAxisRaw("Vertical");
 
+        //bool ChargePress = Input.GetMouseButton(0);
+
         mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
         Vector2 lookDir = mousePos - rb.position;
+        lookDir.Normalize();
 
         UpdateRotation(lookDir);
         ShootCoolDown();
@@ -45,6 +54,15 @@ public class PlayerMovement : MonoBehaviour
 
         }
 
+        if (Input.GetMouseButton(0))
+        {
+            chargetimer += 1f * Time.deltaTime;
+            if (chargetimer > 3f)
+            {
+                ChargeAttack(lookDir);
+                chargetimer = 0f;
+            }
+        }
 
 
     }
@@ -84,7 +102,7 @@ public class PlayerMovement : MonoBehaviour
 
     void ShootCoolDown()
     {
-        if (attackCD < 60)
+        if (attackCD < 180)
         {
             shootCD = false;
             attackCD++;
@@ -93,5 +111,19 @@ public class PlayerMovement : MonoBehaviour
         {
             shootCD = true;
         }
+ 
     }
+    void ChargeAttack(Vector2 direction)
+    {
+        // Instantiate a projectile at the firePoint position
+        GameObject projectile = Instantiate(ChargePrefab, firePoint.position, Quaternion.identity);
+
+        // Get the Rigidbody2D component of the projectile
+        Rigidbody2D projectileRb = projectile.GetComponent<Rigidbody2D>();
+
+        // Set the velocity of the projectile to shoot in the calculated direction
+        projectileRb.velocity = direction * bulletSpeed;
+    }
+
+   
 }
