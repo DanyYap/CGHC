@@ -1,12 +1,14 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerMovement : MonoBehaviour
 {
     public GameObject bulletPrefab;
     public GameObject ChargePrefab;
-    
+
     public Rigidbody2D rb;
     public Transform firePoint;
 
@@ -22,6 +24,12 @@ public class PlayerMovement : MonoBehaviour
     public Camera cam;
     private SpriteRenderer rbSprite;
     private float chargetimer;
+
+    public float maxCharge = 5f;
+    public GameObject backgroundFill;
+    public Image chargeAttackFill;
+
+    bool hasAttacked = false;
 
     private void Start()
     {
@@ -54,14 +62,25 @@ public class PlayerMovement : MonoBehaviour
 
         }
 
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButton(0) && !hasAttacked)
         {
             chargetimer += 1f * Time.deltaTime;
-            if (chargetimer > 3f)
+            backgroundFill.SetActive(true);
+            chargeAttackFill.fillAmount = chargetimer / maxCharge;
+            if (chargetimer > maxCharge)
             {
+                hasAttacked = true;
                 ChargeAttack(lookDir);
                 chargetimer = 0f;
             }
+        }
+
+        if (Input.GetMouseButtonUp(0))
+        {
+            hasAttacked = false;
+            chargetimer = 0;
+            backgroundFill.SetActive(false);
+            chargeAttackFill.fillAmount = 0;
         }
 
 
@@ -102,7 +121,7 @@ public class PlayerMovement : MonoBehaviour
 
     void ShootCoolDown()
     {
-        if (attackCD < 180)
+        if (attackCD < 500)
         {
             shootCD = false;
             attackCD++;
@@ -111,7 +130,7 @@ public class PlayerMovement : MonoBehaviour
         {
             shootCD = true;
         }
- 
+
     }
     void ChargeAttack(Vector2 direction)
     {
@@ -123,7 +142,9 @@ public class PlayerMovement : MonoBehaviour
 
         // Set the velocity of the projectile to shoot in the calculated direction
         projectileRb.velocity = direction * bulletSpeed;
-    }
 
-   
+        backgroundFill.SetActive(false);
+        chargeAttackFill.fillAmount = 0;
+        chargetimer = 0;
+    }
 }
