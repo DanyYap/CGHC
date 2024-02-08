@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class EnemyDestroy : MonoBehaviour
 {
-    
+    public GameObject smallBullet;
+    public GameObject largeBullet;
+    public float healthbar = 3f;
     // Start is called before the first frame update
     void Start()
     {
@@ -14,11 +16,27 @@ public class EnemyDestroy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        life();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        Destroy(gameObject);
+        if (smallBullet)
+        {
+            healthbar--;
+        }
+        if (largeBullet)
+        {
+            healthbar--; ;
+        }
+        
+    }
+
+    private void life()
+    {
+        if (healthbar <= 0)
+        {
+            Destroy(gameObject);
+        }
     }
 }

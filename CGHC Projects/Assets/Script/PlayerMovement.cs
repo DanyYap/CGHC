@@ -9,6 +9,9 @@ public class PlayerMovement : MonoBehaviour
     public GameObject bulletPrefab;
     public GameObject ChargePrefab;
 
+    public AudioClip atkSound;
+    public AudioSource atkSource;
+
     public Rigidbody2D rb;
     public Transform firePoint;
 
@@ -58,6 +61,7 @@ public class PlayerMovement : MonoBehaviour
         if (shootCD == true)
         {
             Shoot(lookDir);
+            atkSource.PlayOneShot(atkSound);
             attackCD = 0f;
 
         }
@@ -121,7 +125,7 @@ public class PlayerMovement : MonoBehaviour
 
     void ShootCoolDown()
     {
-        if (attackCD < 500)
+        if (attackCD < 150)
         {
             shootCD = false;
             attackCD++;
