@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -150,5 +151,14 @@ public class PlayerMovement : MonoBehaviour
         backgroundFill.SetActive(false);
         chargeAttackFill.fillAmount = 0;
         chargetimer = 0;
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Enemy")
+        {
+            SceneManager.LoadScene("GameOverScene");
+
+        }
     }
 }
