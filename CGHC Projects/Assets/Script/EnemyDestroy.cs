@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyDestroy : MonoBehaviour
@@ -7,13 +5,7 @@ public class EnemyDestroy : MonoBehaviour
     public GameObject smallBullet;
     public GameObject largeBullet;
     public float healthbar = 4f;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
     void Update()
     {
         life();
@@ -36,6 +28,7 @@ public class EnemyDestroy : MonoBehaviour
     {
         if (healthbar <= 0)
         {
+            LevelManager.Instance.CheckEnemies();
             Destroy(gameObject);
         }
     }
